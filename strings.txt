@@ -1,0 +1,20 @@
+PLUGIN_RESETVOLUME
+	EN	Reset Volume
+
+PLUGIN_RESETVOLUME_DESC
+	EN	Reset volume to a regular level when powering on a player.
+
+PLUGIN_RESETVOLUME_DISABLE
+	EN	Disable resetting volume
+
+PLUGIN_RESETVOLUME_ENABLE
+	EN	Enable resetting volume
+
+PLUGIN_RESETVOLUME_DISABLING
+	EN	Disabling volume reset
+
+PLUGIN_RESETVOLUME_ENABLING
+	EN	Enabling volume reset
+
+PLUGIN_RESETVOLUME_SELECT_VOLUME
+	EN	Select reset volume
