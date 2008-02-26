@@ -1,8 +1,21 @@
+# GrabPlaylist.pm by Eric Koldinger (kolding@yahoo.com) October, 2004
+#
+# This code is derived from code with the following copyright message:
+#
+# SlimServer Copyright (C) 2001 Sean Adams, Slim Devices Inc.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License,
+# version 2.
+
 package Plugins::ResetVolume::Plugin;
 
 use strict;
 
 use base qw(Slim::Plugin::Base);
+
+
+use vars qw($VERSION);
+$VERSION = "0.1";
 
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
