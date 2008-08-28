@@ -11,9 +11,9 @@
 	<homepageURL>http://koldware.com</homepageURL>
 	<type>2</type><!-- type=extension -->
 	<targetApplication>
-	<id>SqueezeCenter</id>
-	<minVersion>7.0a</minVersion>
-	<maxVersion>7.0+</maxVersion>
+		<id>SqueezeCenter</id>
+		<minVersion>7.0a</minVersion>
+		<maxVersion>*</maxVersion>
 	</targetApplication>
 </extension>
 

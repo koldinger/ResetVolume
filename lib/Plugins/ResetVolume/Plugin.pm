@@ -61,7 +61,7 @@ sub setVolume {
 	my $request = shift;
 	my $client = $request->client();
 
-	if (defined($client) && $prefs->client($client)->get('enabled'))
+	if (defined($client) && $client->power() && $prefs->client($client)->get('enabled'))
 	{
 		my $volume = $prefs->client($client)->get('volume');
 		$log->debug("Setting volume for " . $client->name() . " to $volume");
