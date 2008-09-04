@@ -15,7 +15,7 @@ use base qw(Slim::Plugin::Base);
 
 
 use vars qw($VERSION);
-$VERSION = "0.1";
+$VERSION = "0.2";
 
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
@@ -151,10 +151,11 @@ sub adjustVolume {
 		increment       => 1,
 		onChangeArgs	=> 'V',
 		onChange		=> sub {
-								$prefs->client($client)->set('volume', $_[0]);
+								$log->debug("Setting client " . $client->name() . " reset volume to " . $volume{$client});
+								$prefs->client($client)->set('volume', $volume{$client});
 						   },
 	);
-	Slim::Buttons::Common::pushModeLeft($client, 'INPUT.Bar', \%params);
+	Slim::Buttons::Common::pushModeLeft($client, 'INPUT.Volume', \%params);
 }
 
 sub setDefaults {

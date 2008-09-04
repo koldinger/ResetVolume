@@ -3,7 +3,7 @@
 <extension>
 	<name>PLUGIN_RESETVOLUME</name>
 	<module>Plugins::ResetVolume::Plugin</module>
-	<version>0.1</version>
+	<version>0.2</version>
 	<creator>Eric Koldinger</creator>
 	<defaultState>enabled</defaultState>
 	<description>PLUGIN_RESETVOLUME_DESC</description>
