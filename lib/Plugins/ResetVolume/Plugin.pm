@@ -15,7 +15,7 @@ use base qw(Slim::Plugin::Base);
 
 
 use vars qw($VERSION);
-$VERSION = "0.2";
+$VERSION = "0.3";
 
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
@@ -60,8 +60,11 @@ sub shutdownPlugin {
 sub setVolume {
 	my $request = shift;
 	my $client = $request->client();
+	return unless defined $client;			# has to be a client.  Weird if not here.
 
-	if (defined($client) && $client->power() && $prefs->client($client)->get('enabled'))
+	my $alarm = Slim::Utils::Alarm->getCurrentAlarm($client);
+
+	if ($client->power() && $prefs->client($client)->get('enabled') && !defined($alarm))
 	{
 		my $volume = $prefs->client($client)->get('volume');
 		$log->debug("Setting volume for " . $client->name() . " to $volume");
