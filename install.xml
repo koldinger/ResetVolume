@@ -1,19 +1,18 @@
-<?xml version="1.0"?>
-
+<?xml version='1.0' standalone='yes'?>
 <extension>
-	<name>PLUGIN_RESETVOLUME</name>
-	<module>Plugins::ResetVolume::Plugin</module>
-	<version>0.3</version>
-	<creator>Eric Koldinger</creator>
-	<defaultState>enabled</defaultState>
-	<description>PLUGIN_RESETVOLUME_DESC</description>
-	<email>slim@koldware.com</email>
-	<homepageURL>http://koldware.com</homepageURL>
-	<type>2</type><!-- type=extension -->
-	<targetApplication>
-		<id>SqueezeCenter</id>
-		<minVersion>7.0a</minVersion>
-		<maxVersion>*</maxVersion>
-	</targetApplication>
+  <name>PLUGIN_RESETVOLUME</name>
+  <creator>Eric Koldinger</creator>
+  <defaultState>enabled</defaultState>
+  <description>PLUGIN_RESETVOLUME_DESC</description>
+  <email>slim@koldware.com</email>
+  <homepageURL>http://koldware.com</homepageURL>
+  <id>E5299D9E-7B19-11DD-AA07-8764F02B9ABD</id>
+  <module>Plugins::ResetVolume::Plugin</module>
+  <targetApplication>
+    <id>SqueezeCenter</id>
+    <maxVersion>*</maxVersion>
+    <minVersion>7.0a</minVersion>
+  </targetApplication>
+  <type>2</type>
+  <version>0.4</version>
 </extension>
-

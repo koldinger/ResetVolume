@@ -15,7 +15,7 @@ use base qw(Slim::Plugin::Base);
 
 
 use vars qw($VERSION);
-$VERSION = "0.3";
+$VERSION = "0.4";
 
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
@@ -36,14 +36,16 @@ sub getDisplayName {
 }
 
 my @browseMenuChoices = (
-    'PLUGIN_RESETVOLUME_ON_OFF',       ## Keep this first.
+    'PLUGIN_RESETVOLUME_ENABLE',
 	'PLUGIN_RESETVOLUME_SELECT_VOLUME',
+	'PLUGIN_RESETVOLUME_RAISE'
 );
 my %menuSelection;
 
 my %defaults = (
-    'enabled'       => 0,               # Off by default
-	'volume'       	=> 100,				# max volume
+    'enabled'       => 0,               									# Off by default
+	'volume'       	=> $Slim::Player::Player::defaultPrefs->{'volume'},		# Use the main default.
+	'allowRaise'	=> 1,													# Allow raising volume
 );
 
 
@@ -62,14 +64,25 @@ sub setVolume {
 	my $client = $request->client();
 	return unless defined $client;			# has to be a client.  Weird if not here.
 
-	my $alarm = Slim::Utils::Alarm->getCurrentAlarm($client);
+	$log->debug("setVolume called for client " . $client->name());
 
-	if ($client->power() && $prefs->client($client)->get('enabled') && !defined($alarm))
-	{
-		my $volume = $prefs->client($client)->get('volume');
-		$log->debug("Setting volume for " . $client->name() . " to $volume");
-		$client->execute(["mixer", "volume", $volume]);
+	my $cPrefs = $prefs->client($client);
+
+	return unless ($cPrefs->get('enabled'));
+	return unless $client->power();			# Ignore if being turned off.
+	my $alarm = Slim::Utils::Alarm->getCurrentAlarm($client);
+	return if defined $alarm;				# If we're in an alarm, defer to it's value
+
+	my $volume = $cPrefs->get('volume');
+
+	if (!$cPrefs->get('allowRaise')) {
+		my $curVolume = $client->volume();
+		$log->debug("allowRaise disabled.  Current: " . $curVolume . " Target: " . $volume);
+		return if ($curVolume <= $volume);
 	}
+
+	$log->debug("Setting volume for " . $client->name() . " to $volume");
+	$client->execute(["mixer", "volume", $volume]);
 }
 
 sub setMode {
@@ -85,17 +98,23 @@ sub setMode {
 sub lines {
     my $client = shift;
     my ($line1, $line2, $overlay2);
+	my $flag;
 
     $line1 = $client->string('PLUGIN_RESETVOLUME') . " (" . ($menuSelection{$client}+1) . " " . $client->string('OF') . " " . ($#browseMenuChoices + 1) . ")";
+	$line2	  = $client->string($browseMenuChoices[$menuSelection{$client}]);
 
-    if ($menuSelection{$client} != 0) {
-        $line2 = $client->string($browseMenuChoices[$menuSelection{$client}]);
-    } else {
-        my $flag = $prefs->client($client)->get('enabled');
-		$line2 = $client->string($flag ?  'PLUGIN_RESETVOLUME_DISABLE' : 'PLUGIN_RESETVOLUME_ENABLE');
-    }
+    if ($browseMenuChoices[$menuSelection{$client}] eq 'PLUGIN_RESETVOLUME_ENABLE') {
+        $flag  = $prefs->client($client)->get('enabled');
+		$overlay2 = Slim::Buttons::Common::checkBoxOverlay($client, $flag);
+    } elsif ($browseMenuChoices[$menuSelection{$client}] eq 'PLUGIN_RESETVOLUME_RAISE') {
+        $flag  = $prefs->client($client)->get('allowRaise');
+		$overlay2 = Slim::Buttons::Common::checkBoxOverlay($client, $flag);
+	}
 
-    return { 'line1' => $line1, 'line2' => $line2 };
+    return { 
+		'line'		=> [ $line1, $line2],
+		'overlay'	=> [undef, $overlay2],
+	};
 }
 
 my %functions = (
@@ -115,13 +134,20 @@ my %functions = (
 		my $client = shift;
 		my $cPrefs = $prefs->client($client);
 		my $selection = $menuSelection{$client};
-		if ($browseMenuChoices[$selection] eq 'PLUGIN_RESETVOLUME_ON_OFF')
+
+		if ($browseMenuChoices[$selection] eq 'PLUGIN_RESETVOLUME_ENABLE')
 		{
 			my $enabled = $cPrefs->get('enabled') || 0;
 			$client->showBriefly({ 'line1' => string('PLUGIN_RESETVOLUME'), 
 								   'line2' => string($enabled ? 'PLUGIN_RESETVOLUME_DISABLING' :
 																'PLUGIN_RESETVOLUME_ENABLING') });
 			$cPrefs->set('enabled', ($enabled ? 0 : 1));
+		} elsif ($browseMenuChoices[$selection] eq 'PLUGIN_RESETVOLUME_RAISE') {
+			my $allowRaise = $cPrefs->get('allowRaise') || 0;
+			$client->showBriefly({ 'line1' => string('PLUGIN_RESETVOLUME'), 
+								   'line2' => string($allowRaise ? 'PLUGIN_RESETVOLUME_DISALLOWING_RAISE' :
+																   'PLUGIN_RESETVOLUME_ALLOWING_RAISE') });
+			$cPrefs->set('allowRaise', ($allowRaise ? 0 : 1));
 		} elsif ($browseMenuChoices[$selection] eq 'PLUGIN_RESETVOLUME_SELECT_VOLUME')
 		{
 			adjustVolume($client);
@@ -145,8 +171,7 @@ sub adjustVolume {
 		header          => sub {
 			# When using a single line display, only the header is shown and
 			# may not fit the client name plus the volume level
-				($client->linesPerScreen() != 1 ?  $client->name(). ' ' : '')
-				. $client->string('PLUGIN_RESETVOLUME_SELECT_VOLUME');
+				$client->string('PLUGIN_RESETVOLUME_VOLUME');
 				},
 		headerValueArgs => 'V',
 		headerValue     => sub { return $client->volumeString($_[0]) },
@@ -154,7 +179,7 @@ sub adjustVolume {
 		increment       => 1,
 		onChangeArgs	=> 'V',
 		onChange		=> sub {
-								$log->debug("Setting client " . $client->name() . " reset volume to " . $volume{$client});
+								# $log->debug("Setting client " . $client->name() . " reset volume to " . $volume{$client});
 								$prefs->client($client)->set('volume', $volume{$client});
 						   },
 	);
