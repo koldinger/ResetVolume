@@ -1,0 +1,17 @@
+[% PROCESS settings/header.html %]
+	[% WRAPPER setting title="PLUGIN_RESETVOLUME_ENABLE" desc="PLUGIN_RESETVOLUME_ENABLE_DESC" %]
+	    <input type="checkbox" [% IF prefs.pref_enabled %]checked [% END %] class="stdedit" name="pref_enabled" value="1"/>
+	    <!-- <label for="enabled" class="stdlabel">[% "PLUGIN_RESETVOLUME_ENABLE" | string %]</label> -->
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_RESETVOLUME_VOLUME" desc="PLUGIN_RESETVOLUME_VOLUME_DESC" %]
+		<input type="text" class="stdedit sliderInput_0_100" name="pref_volume" 
+				value="[% prefs.pref_volume %]" size="3">
+		[% END %]
+
+	[% WRAPPER setting title="PLUGIN_RESETVOLUME_RAISE" desc="PLUGIN_RESETVOLUME_RAISE_DESC" %]
+	    <input type="checkbox" [% IF prefs.pref_allowRaise %]checked [% END %] class="stdedit" name="pref_allowRaise" value="1"/>
+	    <!-- <label for="allowRaise" class="stdlabel">[% "PLUGIN_RESETVOLUME_ENABLE" | string %]</label> -->
+	[% END %]
+
+[% PROCESS settings/footer.html %]

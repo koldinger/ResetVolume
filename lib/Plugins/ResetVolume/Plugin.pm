@@ -15,13 +15,15 @@ use base qw(Slim::Plugin::Base);
 
 
 use vars qw($VERSION);
-$VERSION = "0.4";
+$VERSION = "0.5";
 
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
 use Slim::Utils::Prefs;
 use Slim::Utils::Strings qw(string);
 use Slim::Utils::Log;
+
+use Plugins::ResetVolume::PlayerSettings;
 
 my $log = Slim::Utils::Log->addLogCategory({
     'category' => 'plugin.resetvolume',
@@ -43,15 +45,17 @@ my @browseMenuChoices = (
 my %menuSelection;
 
 my %defaults = (
-    'enabled'       => 0,               									# Off by default
-	'volume'       	=> $Slim::Player::Player::defaultPrefs->{'volume'},		# Use the main default.
-	'allowRaise'	=> 1,													# Allow raising volume
+    'enabled'       => 0,
+	'allowRaise'	=> 1,
+	'volume'       	=> $Slim::Player::Player::defaultPrefs->{'volume'},
 );
 
 
 sub initPlugin {
 	my $class = shift;
     $class->SUPER::initPlugin(@_);
+	Plugins::ResetVolume::PlayerSettings->new();
+
 	Slim::Control::Request::subscribe(\&setVolume, [['power']]);
 }
 
@@ -190,13 +194,21 @@ sub setDefaults {
     my $client = shift;
     my $force = shift;
     my $clientPrefs = $prefs->client($client);
-    $log->debug("Checking defaults for " . $client->name());
+    $log->debug("Checking defaults for " . $client->name() . " Forcing: " . $force);
     foreach my $key (keys %defaults) {
         if (!defined($clientPrefs->get($key)) || $force) {
             $log->debug("Setting default value for $key: " . $defaults{$key});
             $clientPrefs->set($key, $defaults{$key});
         }
     }
+}
+
+# Hack.  External version.  Called with class as first argument.  Yuck.
+sub extSetDefaults {
+	my $class = shift;          ## Get rid of this
+	my $client = shift;
+	my $force = shift;
+	setDefaults($client, $force);
 }
 
 sub getFunctions { return \%functions;}

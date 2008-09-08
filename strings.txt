@@ -28,3 +28,11 @@ PLUGIN_RESETVOLUME_DISALLOWING_RAISE
 PLUGIN_RESETVOLUME_ALLOWING_RAISE
 	EN	Raise volume
 
+PLUGIN_RESETVOLUME_ENABLE_DESC
+	EN	Reset the volume to a preset level when the player is turned on.
+
+PLUGIN_RESETVOLUME_VOLUME_DESC
+	EN	Volume level to be set when player is turned on.
+
+PLUGIN_RESETVOLUME_RAISE_DESC
+	EN	If the volume was below the preset level when the player was turned off, leave it there rather than raising it.
