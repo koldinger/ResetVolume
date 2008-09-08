@@ -11,7 +11,7 @@
   <targetApplication>
     <id>SqueezeCenter</id>
     <maxVersion>*</maxVersion>
-    <minVersion>7.0a</minVersion>
+    <minVersion>7.2</minVersion>
   </targetApplication>
   <type>2</type>
   <version>0.5</version>
