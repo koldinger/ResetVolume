@@ -32,6 +32,7 @@ my $log = Slim::Utils::Log->addLogCategory({
 });
 
 my $prefs = preferences('plugin.resetvolume');
+my $sPrefs = preferences('server');
 
 sub getDisplayName {
 	return 'PLUGIN_RESETVOLUME';
@@ -40,7 +41,7 @@ sub getDisplayName {
 my @browseMenuChoices = (
     'PLUGIN_RESETVOLUME_ENABLE',
 	'PLUGIN_RESETVOLUME_SELECT_VOLUME',
-	'PLUGIN_RESETVOLUME_RAISE'
+	'PLUGIN_RESETVOLUME_RAISE',
 );
 my %menuSelection;
 
@@ -72,15 +73,24 @@ sub setVolume {
 
 	my $cPrefs = $prefs->client($client);
 
+	# Only move on if we're alive
 	return unless ($cPrefs->get('enabled'));
-	return unless $client->power();			# Ignore if being turned off.
+
+	# If power is being turned off, we're really not interested in setting the volume.
+	return unless $client->power();
+
+
 	my $alarm = Slim::Utils::Alarm->getCurrentAlarm($client);
 	return if defined $alarm;				# If we're in an alarm, defer to it's value
 
 	my $volume = $cPrefs->get('volume');
 
 	if (!$cPrefs->get('allowRaise')) {
-		my $curVolume = $client->volume();
+		# Can't just ask the player what the volume is, because at power on, if playing
+		# is set, volume quickly fades from 0 to the previous volume, and we can get the
+		# temporary value in the middle of the slide.
+		#my $curVolume = $client->volume();
+		my $curVolume = $sPrefs->client($client)->get('volume');
 		$log->debug("allowRaise disabled.  Current: " . $curVolume . " Target: " . $volume);
 		return if ($curVolume <= $volume);
 	}
@@ -107,6 +117,7 @@ sub lines {
     $line1 = $client->string('PLUGIN_RESETVOLUME') . " (" . ($menuSelection{$client}+1) . " " . $client->string('OF') . " " . ($#browseMenuChoices + 1) . ")";
 	$line2	  = $client->string($browseMenuChoices[$menuSelection{$client}]);
 
+	# Add a checkbox
     if ($browseMenuChoices[$menuSelection{$client}] eq 'PLUGIN_RESETVOLUME_ENABLE') {
         $flag  = $prefs->client($client)->get('enabled');
 		$overlay2 = Slim::Buttons::Common::checkBoxOverlay($client, $flag);
