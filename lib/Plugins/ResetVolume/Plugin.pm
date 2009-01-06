@@ -13,10 +13,6 @@ use strict;
 
 use base qw(Slim::Plugin::Base);
 
-
-use vars qw($VERSION);
-$VERSION = "0.6";
-
 use Slim::Buttons::Home;
 use Slim::Utils::Misc;
 use Slim::Utils::Prefs;
