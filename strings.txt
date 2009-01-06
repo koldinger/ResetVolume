@@ -1,38 +1,51 @@
 PLUGIN_RESETVOLUME
 	EN	Reset Volume
+	DE	Lautstärke rücksetzen
 
 PLUGIN_RESETVOLUME_DESC
 	EN	Reset volume to a preset level when powering on a player.
+	DE	Setze die Lautstärke auf eine voreingestellte Lautstärke zurück sobald ein Gerät eingeschaltet wird.
 
 PLUGIN_RESETVOLUME_ENABLE
 	EN	Enable resetting volume
+	DE	Erlaube Rücksetzung der Lautstärke
 
 PLUGIN_RESETVOLUME_DISABLING
 	EN	Disabling volume reset
+	DE	verbiete Rücksetzung der Lautstärke
 
 PLUGIN_RESETVOLUME_ENABLING
 	EN	Enabling volume reset
+	DE	Rücksetzung der Lautstärke aktiviert
 
 PLUGIN_RESETVOLUME_SELECT_VOLUME
 	EN	Select reset volume
+	DE	Wähle Lautstärke für Rücksetzung
 
 PLUGIN_RESETVOLUME_VOLUME
 	EN	Reset volume
+	DE	Lautstärke rücksetzen
 
 PLUGIN_RESETVOLUME_RAISE
 	EN	Allow raising volume on reset
+	DE	Erlaube Ansteigen der Lautstärke bei Rücksetzung
 
 PLUGIN_RESETVOLUME_DISALLOWING_RAISE
 	EN	Do not raise volume
+	DE	Lautstärke nicht ansteigen lassen
 
 PLUGIN_RESETVOLUME_ALLOWING_RAISE
 	EN	Raise volume
+	DE	ansteigende Lautstärke
 
 PLUGIN_RESETVOLUME_ENABLE_DESC
 	EN	Reset the volume to a preset level when the player is turned on.
+	DE	Setze die Lautstärke auf eine voreingestellte Lautstärke zurück sobald das Gerät eingeschaltet wird.
 
 PLUGIN_RESETVOLUME_VOLUME_DESC
 	EN	Volume level to be set when player is turned on.
+	DE	Lautstärke setzen sobald Gerät eingeschaltet wird.
 
 PLUGIN_RESETVOLUME_RAISE_DESC
 	EN	If the volume was below the preset level when the player was turned off, leave it there rather than raising it.
+	DE	Falls die Lautstärke unterhalb der eingestellten Stärke war, als das Gerät abgeschaltet wurde, dabei belassen anstatt zu erhöhen.
