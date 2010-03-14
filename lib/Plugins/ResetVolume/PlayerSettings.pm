@@ -19,7 +19,7 @@ my $prefs = preferences('plugin.resetvolume');
 my $log   = logger('plugin.resetvolume');
 
 sub name {
-	return Slim::Web::HTTP::protectName('PLUGIN_RESETVOLUME');
+	return Slim::Web::HTTP::CSRF->protectName('PLUGIN_RESETVOLUME');
 }
 
 sub needsClient {
@@ -31,7 +31,7 @@ sub validFor {
 }
 
 sub page {
-	return Slim::Web::HTTP::protectURI('plugins/ResetVolume/settings/player.html');
+	return Slim::Web::HTTP::CSRF->protectURI('plugins/ResetVolume/settings/player.html');
 }
 
 sub prefs {
